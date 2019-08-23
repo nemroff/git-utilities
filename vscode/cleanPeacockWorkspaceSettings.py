@@ -37,10 +37,12 @@ def is_not_empty(any_structure):
         return False
 
 with open(".vscode/settings.json", "r") as read_file:
-    data = load_dirty_json(read_file.read())
+    rawdata = read_file.read()
+    data = load_dirty_json(rawdata)
 
 # print(json.dumps(data, indent=2))
 
+# If we have a match, clean it and return the results
 if "peacock.color" in data.keys():
     del data["peacock.color"]
     del data["workbench.colorCustomizations"]
@@ -48,5 +50,9 @@ if "peacock.color" in data.keys():
         if key.startswith("peacock"):
             del data[key]
 
-if is_not_empty(data):
-    print(json.dumps(data, indent=2))
+    if is_not_empty(data):
+        print(json.dumps(data, indent=2))
+    else:
+        print('')
+else:
+    print(rawdata)
