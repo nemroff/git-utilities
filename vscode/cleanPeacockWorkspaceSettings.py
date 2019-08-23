@@ -1,3 +1,6 @@
+#!/usr/bin/python
+
+import sys
 import re
 import json
 
@@ -25,18 +28,24 @@ def load_dirty_json(dirty_json):
 
     return clean_json
 
-# with open(".vscode/settings.json", "w") as write_file:
-#     json.dump(data, write_file)
 
-def is_not_empty(any_structure):
+
+def is_empty(any_structure):
     if any_structure:
         # print('Structure is not empty.')
-        return True
+        return False
     else:
         # print('Structure is empty.')
-        return False
+        return True
 
-with open(".vscode/settings.json", "r") as read_file:
+
+
+if is_empty(sys.argv[1]):
+    exit()
+
+
+
+with open( str(sys.argv[1]), "r") as read_file:
     rawdata = read_file.read()
     data = load_dirty_json(rawdata)
 
@@ -50,7 +59,7 @@ if "peacock.color" in data.keys():
         if key.startswith("peacock"):
             del data[key]
 
-    if is_not_empty(data):
+    if not is_empty(data):
         print(json.dumps(data, indent=2))
     else:
         print('')
