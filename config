@@ -1,4 +1,4 @@
 [filter "vscode-peacock"]
-	clean = 'vscode/cleanPeacockWorkspaceSettings.py'
+	clean = vscode/cleanPeacockWorkspaceSettings.py '%f'
 [core]
 	attributesfile = attributes
