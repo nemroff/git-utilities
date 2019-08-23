@@ -40,14 +40,22 @@ def is_empty(any_structure):
 
 
 
-if is_empty(sys.argv[1]):
+if (len(sys.argv) != 2) or (is_empty(sys.argv[1])):
     exit()
 
 
+try:
+    with open(str(sys.argv[1]), "r") as read_file:
+        rawdata = read_file.read()
+except:
+    exit()
 
-with open( str(sys.argv[1]), "r") as read_file:
-    rawdata = read_file.read()
+
+try:
     data = load_dirty_json(rawdata)
+except:
+    print(rawdata)
+    exit()
 
 # print(json.dumps(data, indent=2))
 
