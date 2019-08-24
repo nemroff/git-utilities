@@ -2,3 +2,4 @@
 	clean = vscode/cleanPeacockWorkspaceSettings.py '%f'
 [core]
 	attributesfile = attributes
+	excludesfile = ignore
