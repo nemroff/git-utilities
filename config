@@ -1,5 +1,5 @@
 [filter "vscode-peacock"]
-	clean = vscode/cleanPeacockWorkspaceSettings.py '%f'
+	clean = ~/.gitutils/vscode/cleanPeacockWorkspaceSettings.py '%f'
 [core]
-	attributesfile = attributes
-	excludesfile = ignore
+	excludesfile = ~/.gitutils/ignore
+	attributesfile = ~/.gitutils/attributes
