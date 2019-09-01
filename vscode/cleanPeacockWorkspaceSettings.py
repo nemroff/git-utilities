@@ -3,6 +3,7 @@
 import sys
 import re
 import json
+from collections import OrderedDict
 
 def load_dirty_json(dirty_json):
 
@@ -24,7 +25,7 @@ def load_dirty_json(dirty_json):
     for r, s in regex_replace:
         dirty_json = re.sub(r, s, dirty_json)
     
-    clean_json = json.loads(dirty_json)
+    clean_json = json.loads(dirty_json, object_pairs_hook=OrderedDict)
 
     return clean_json
 
