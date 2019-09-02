@@ -16,7 +16,9 @@ def load_dirty_json(dirty_json):
             return match.group(1) # captured quoted-string
     
     regex_replace = [
-        (r",(\s+[\}\]])", r'\1'), # Remove trailing commas
+        # (r",(\s+[\}\]])", r'\1'), # Remove trailing commas
+        (r'(,)\s*}(?=([^"\\]*(\\.|"([^"\\]*\\.)*[^"\\]*"))*[^"]*$)', r'}'), # Remove trailing object commas
+        (r'(,)\s*\](?=([^"\\]*(\\.|"([^"\\]*\\.)*[^"\\]*"))*[^"]*$)', r']'), # Remove trailing array commas
         (r"\/\*[\s\S]*?\*\/", r''), # Remove block comments
         (re.compile(r"(\".*?(?<!\\)\"|\'.*?(?<!\\)\')|(/\*.*?\*/|//[^\r\n]*$)", re.MULTILINE|re.DOTALL), _replacer), # Remove line comments
         (re.compile(r"^[ \s]+$[\n\r]+", re.MULTILINE), r'') # Remove empty lines
@@ -33,44 +35,45 @@ def load_dirty_json(dirty_json):
 
 def is_empty(any_structure):
     if any_structure:
-        # print('Structure is not empty.')
         return False
     else:
-        # print('Structure is empty.')
         return True
 
 
 
 if (len(sys.argv) != 2) or (is_empty(sys.argv[1])):
-    exit()
+    sys.exit(1)
 
 
 try:
     with open(str(sys.argv[1]), "r") as read_file:
-        rawdata = read_file.read()
+        rawdata = read_file.read().decode('utf-8')
 except:
-    exit()
+    sys.exit(1)
 
 
 try:
     data = load_dirty_json(rawdata)
 except:
-    print(rawdata)
-    exit()
+    sys.exit(1)
 
-# print(json.dumps(data, indent=2))
+try:
+    # If we have a match, clean it and return the results
+    if "peacock.color" in data.keys():
+        del data["peacock.color"]
+        del data["workbench.colorCustomizations"]
+        for key in data.keys():
+            if key.startswith("peacock"):
+                del data[key]
 
-# If we have a match, clean it and return the results
-if "peacock.color" in data.keys():
-    del data["peacock.color"]
-    del data["workbench.colorCustomizations"]
-    for key in data.keys():
-        if key.startswith("peacock"):
-            del data[key]
+        if not is_empty(data):
+            sys.stdout.write(json.dumps(data, indent=2))
+            sys.stdout.flush()
 
-    if not is_empty(data):
-        print(json.dumps(data, indent=2))
     else:
-        print('')
-else:
-    print(rawdata)
+        sys.exit(1)
+
+except:
+    sys.exit(1)
+
+sys.exit()
